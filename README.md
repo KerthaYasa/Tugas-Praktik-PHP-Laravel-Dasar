@@ -1,5 +1,3 @@
-Berikut README Anda yang sudah dirapikan dengan struktur dan format yang lebih baik:
-
 ```markdown
 <!-- Header -->
 <p align="center">
