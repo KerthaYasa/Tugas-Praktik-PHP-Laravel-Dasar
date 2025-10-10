@@ -1,4 +1,3 @@
-```markdown
 <!-- Header -->
 <p align="center">
   <img src="https://laravel.com/img/logomark.min.svg" width="90" alt="Laravel Logo">
@@ -22,20 +21,20 @@
 
 ## 🚀 **Fitur Utama**
 
-- ✨ CRUD Mahasiswa (Create, Read, Update, Delete)
-- ✨ Validasi input data dengan Laravel Validation
-- ✨ Fitur pencarian data mahasiswa
-- ✨ Pagination otomatis
-- ✨ Nomor urut dinamis walau data dihapus
-- ✨ Modal konfirmasi hapus menggunakan Bootstrap
-- ✨ Desain modern, clean, dan responsif dengan **Bootstrap 5**
+✨ CRUD Mahasiswa (Create, Read, Update, Delete)  
+✨ Validasi input data dengan Laravel Validation  
+✨ Fitur pencarian data mahasiswa  
+✨ Pagination otomatis  
+✨ Nomor urut dinamis walau data dihapus  
+✨ Modal konfirmasi hapus menggunakan Bootstrap  
+✨ Desain modern, clean, dan responsif dengan **Bootstrap 5**
 
 ---
 
 ## 🧩 **Teknologi yang Digunakan**
 
 | Komponen | Keterangan |
-|----------|------------|
+|-----------|-------------|
 | 🧠 **Framework** | Laravel 10 |
 | 🧮 **Bahasa** | PHP 8+ |
 | 🎨 **Frontend** | Bootstrap 5, Blade Template |
@@ -47,10 +46,11 @@
 
 ## ⚙️ **Langkah Menjalankan Project**
 
-### 1️⃣ **Clone Repository**
+1️⃣ **Clone Repository**
 ```bash
 git clone https://github.com/KerthaYasa/Tugas-Praktik-PHP-Laravel-Dasar.git
 cd Tugas-Praktik-PHP-Laravel-Dasar
+
 ```
 
 ### 2️⃣ **Install Dependency**
