@@ -1,17 +1,17 @@
 @extends('layouts.app')
 
-@section('title','Tambah Mahasiswa')
+@section('title','Tambah Program Studi')
 
 @section('content')
 <div class="card">
   <div class="card-body">
     <div class="d-flex align-items-center mb-3">
       <div class="me-3">
-        <i class="bi bi-person-plus fs-3"></i>
+        <i class="bi bi-journal-code fs-3"></i>
       </div>
       <div>
-        <h3 class="mb-0">Tambah Mahasiswa</h3>
-        <small class="text-muted">Masukkan data mahasiswa lengkap beserta program studi</small>
+        <h3 class="mb-0">Tambah Program Studi</h3>
+        <small class="text-muted">Masukkan nama prodi, kaprodi, dan pilih fakultas</small>
       </div>
     </div>
 
@@ -26,16 +26,18 @@
       </div>
     @endif
 
-    <form action="{{ route('mahasiswa.store') }}" method="POST">
+    <form action="{{ route('prodi.store') }}" method="POST">
       @csrf
-      @include('mahasiswa._form')
-      
+
+      @include('prodi._form')
+
       <div class="d-flex justify-content-end mt-4">
+ 
         <div>
           <button type="submit" class="btn btn-primary">
             <i class="bi bi-save me-1"></i> Simpan
           </button>
-          <a href="{{ route('mahasiswa.index') }}" class="btn btn-outline-secondary ms-2">Batal</a>
+          <a href="{{ route('prodi.index') }}" class="btn btn-outline-secondary ms-2">Batal</a>
         </div>
       </div>
     </form>

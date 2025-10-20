@@ -3,13 +3,45 @@
 @section('title','Detail Mahasiswa')
 
 @section('content')
-  <h2 class="page-title">Detail Mahasiswa</h2>
+<div class="card shadow-sm">
+  <div class="card-body">
+    <h3 class="page-title mb-3"><i class="bi bi-info-circle"></i> Detail Mahasiswa</h3>
 
-  <div class="card p-3">
-    <p><strong>NIM:</strong> {{ $m->nim }}</p>
-    <p><strong>Nama:</strong> {{ $m->nama }}</p>
-    <p><strong>Prodi:</strong> {{ $m->prodi }}</p>
-    <a href="{{ route('mahasiswa.index') }}" class="btn btn-outline-secondary">Kembali</a>
-    <a href="{{ route('mahasiswa.edit', $m->id) }}" class="btn btn-success">Edit</a>
+    <table class="table table-bordered align-middle">
+      <tr>
+        <th>NIM</th>
+        <td>{{ $m->nim }}</td>
+      </tr>
+      <tr>
+        <th>Nama</th>
+        <td>{{ $m->nama }}</td>
+      </tr>
+      <tr>
+        <th>Prodi</th>
+        <td>{{ $m->prodi->nama_prodi ?? '-' }}</td>
+      </tr>
+      <tr>
+        <th>Fakultas</th>
+        <td>{{ $m->prodi && $m->prodi->fakultas ? $m->prodi->fakultas->nama_fakultas : '-' }}</td>
+      </tr>
+      <tr>
+        <th>Dibuat pada</th>
+        <td>{{ optional($m->created_at)->format('d M Y H:i') ?? '-' }}</td>
+      </tr>
+      <tr>
+        <th>Terakhir diperbarui</th>
+        <td>{{ optional($m->updated_at)->format('d M Y H:i') ?? '-' }}</td>
+      </tr>
+    </table>
+
+    <div class="d-flex justify-content-end gap-2 mt-4">
+      <a href="{{ route('mahasiswa.edit', $m->id) }}" class="btn btn-success">
+        <i class="bi bi-pencil"></i> Edit
+      </a>
+      <a href="{{ route('mahasiswa.index') }}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Kembali
+      </a>
+    </div>
   </div>
+</div>
 @endsection

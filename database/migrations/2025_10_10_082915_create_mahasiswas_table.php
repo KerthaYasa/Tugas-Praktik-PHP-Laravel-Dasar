@@ -13,9 +13,10 @@ return new class extends Migration
     {
     Schema::create('mahasiswa', function (Blueprint $table) {
         $table->id();
-        $table->string('nim', 20)->unique();
-        $table->string('nama', 100);
-        $table->string('prodi', 100);
+        $table->string('nim')->unique();
+        $table->string('nama');
+        $table->unsignedBigInteger('prodi_id')->nullable();
+        $table->foreign('prodi_id')->references('id')->on('prodi')->onDelete('set null');
         $table->timestamps();
     });
     }
