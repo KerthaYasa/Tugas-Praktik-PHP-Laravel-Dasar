@@ -30,6 +30,14 @@ class ProdiController extends Controller
             'nama_prodi' => 'required|string|max:100|unique:prodi,nama_prodi',
             'kaprodi' => 'required|string|max:100',
             'fakultas_id' => 'required|exists:fakultas,id'
+        ], [
+            'nama_prodi.required' => 'Nama program studi wajib diisi.',
+            'nama_prodi.unique' => 'Nama program studi ini sudah terdaftar.',
+            'nama_prodi.max' => 'Nama program studi maksimal 100 karakter.',
+            'kaprodi.required' => 'Nama kaprodi wajib diisi.',
+            'kaprodi.max' => 'Nama kaprodi maksimal 100 karakter.',
+            'fakultas_id.required' => 'Fakultas wajib dipilih.',
+            'fakultas_id.exists' => 'Fakultas yang dipilih tidak valid.'
         ]);
 
         Prodi::create($request->only(['nama_prodi', 'kaprodi', 'fakultas_id']));
@@ -38,7 +46,7 @@ class ProdiController extends Controller
 
     public function show(Prodi $prodi)
     {
-        $prodi->loadCount('mahasiswa'); // ✅ Load count mahasiswa
+        $prodi->loadCount('mahasiswa');
         return view('prodi.show', ['p' => $prodi]);
     }
 
@@ -54,6 +62,14 @@ class ProdiController extends Controller
             'nama_prodi' => 'required|string|max:100|unique:prodi,nama_prodi,' . $prodi->id,
             'kaprodi' => 'required|string|max:100',
             'fakultas_id' => 'required|exists:fakultas,id'
+        ], [
+            'nama_prodi.required' => 'Nama program studi wajib diisi.',
+            'nama_prodi.unique' => 'Nama program studi ini sudah terdaftar.',
+            'nama_prodi.max' => 'Nama program studi maksimal 100 karakter.',
+            'kaprodi.required' => 'Nama kaprodi wajib diisi.',
+            'kaprodi.max' => 'Nama kaprodi maksimal 100 karakter.',
+            'fakultas_id.required' => 'Fakultas wajib dipilih.',
+            'fakultas_id.exists' => 'Fakultas yang dipilih tidak valid.'
         ]);
 
         $prodi->update($request->only(['nama_prodi', 'kaprodi', 'fakultas_id']));

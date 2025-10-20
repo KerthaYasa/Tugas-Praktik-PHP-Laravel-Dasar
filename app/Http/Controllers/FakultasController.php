@@ -9,7 +9,6 @@ class FakultasController extends Controller
 {
     public function index()
     {
-        // withCount('prodi') menambahkan atribut prodi_count
         $fakultas = Fakultas::withCount('prodi')->orderBy('nama_fakultas')->paginate(10);
         return view('fakultas.index', compact('fakultas'));
     }
@@ -24,6 +23,10 @@ class FakultasController extends Controller
         $request->validate([
             'nama_fakultas' => 'required|string|max:150|unique:fakultas,nama_fakultas',
             'dekan' => 'nullable|string|max:150',
+        ], [
+            'nama_fakultas.required' => 'Nama fakultas wajib diisi.',
+            'nama_fakultas.unique' => 'Nama fakultas ini sudah terdaftar.',
+            'nama_fakultas.max' => 'Nama fakultas maksimal 150 karakter.',
         ]);
 
         Fakultas::create($request->only(['nama_fakultas','dekan']));
@@ -45,6 +48,10 @@ class FakultasController extends Controller
         $request->validate([
             'nama_fakultas' => 'required|string|max:150|unique:fakultas,nama_fakultas,' . $fakultas->id,
             'dekan' => 'nullable|string|max:150',
+        ], [
+            'nama_fakultas.required' => 'Nama fakultas wajib diisi.',
+            'nama_fakultas.unique' => 'Nama fakultas ini sudah terdaftar.',
+            'nama_fakultas.max' => 'Nama fakultas maksimal 150 karakter.',
         ]);
 
         $fakultas->update($request->only(['nama_fakultas','dekan']));
