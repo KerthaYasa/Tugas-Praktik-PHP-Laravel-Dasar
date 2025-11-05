@@ -1,19 +1,16 @@
 <?php
-
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Fakultas extends Model
 {
-    use HasFactory;
+    protected $table = 'fakultas';
+    protected $fillable = ['kode_fakultas','nama_fakultas'];
 
-    // jangan masukkan jumlah_prodi di fillable karena dihitung otomatis
-    protected $fillable = ['nama_fakultas', 'dekan'];
-
-    public function prodi()
+    public function prodi(): HasMany
     {
-        return $this->hasMany(\App\Models\Prodi::class, 'fakultas_id');
+        return $this->hasMany(ProgramStudi::class, 'fakultas_id');
     }
 }

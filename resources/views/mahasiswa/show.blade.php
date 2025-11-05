@@ -1,45 +1,35 @@
 @extends('layouts.app')
 
-@section('title','Detail Mahasiswa')
+@section('title', 'Detail Mahasiswa')
 
 @section('content')
-<div class="card shadow-sm">
-  <div class="card-body">
-    <h3 class="page-title mb-3"><i class="bi bi-info-circle"></i> Detail Mahasiswa</h3>
+<div class="card shadow border-0 rounded-3">
+  <div class="card-header bg-primary text-white d-flex align-items-center">
+    <i class="bi bi-person-vcard fs-4 me-2"></i>
+    <h5 class="mb-0">Detail Mahasiswa</h5>
+  </div>
 
-    <table class="table table-bordered align-middle">
-      <tr>
-        <th>NIM</th>
-        <td>{{ $m->nim }}</td>
-      </tr>
-      <tr>
-        <th>Nama</th>
-        <td>{{ $m->nama }}</td>
-      </tr>
-      <tr>
-        <th>Prodi</th>
-        <td>{{ $m->prodi->nama_prodi ?? '-' }}</td>
-      </tr>
-      <tr>
-        <th>Fakultas</th>
-        <td>{{ $m->prodi && $m->prodi->fakultas ? $m->prodi->fakultas->nama_fakultas : '-' }}</td>
-      </tr>
-      <tr>
-        <th>Dibuat pada</th>
-        <td>{{ optional($m->created_at)->format('d M Y H:i') ?? '-' }}</td>
-      </tr>
-      <tr>
-        <th>Terakhir diperbarui</th>
-        <td>{{ optional($m->updated_at)->format('d M Y H:i') ?? '-' }}</td>
-      </tr>
+  <div class="card-body">
+    <table class="table table-borderless mb-4">
+      <tr><th style="width: 180px;">NIM</th><td>{{ $mahasiswa->nim }}</td></tr>
+      <tr><th>Nama</th><td>{{ $mahasiswa->nama }}</td></tr>
+      <tr><th>Program Studi</th><td>{{ $mahasiswa->prodi->nama_prodi ?? '-' }}</td></tr>
+      <tr><th>Fakultas</th><td>{{ $mahasiswa->prodi->fakultas->nama_fakultas ?? '-' }}</td></tr>
+      <tr><th>Email</th><td>{{ $mahasiswa->email ?? '-' }}</td></tr>
+      <tr><th>Telepon</th><td>{{ $mahasiswa->telepon ?? '-' }}</td></tr>
+      <tr><th>Alamat</th><td>{{ $mahasiswa->alamat ?? '-' }}</td></tr>
+      <tr><th>Dibuat Pada</th><td>{{ optional($mahasiswa->created_at)->format('d M Y, H:i') ?? '-' }}</td></tr>
+      <tr><th>Terakhir Diperbarui</th><td>{{ optional($mahasiswa->updated_at)->format('d M Y, H:i') ?? '-' }}</td></tr>
     </table>
 
-    <div class="d-flex justify-content-end gap-2 mt-4">
-      <a href="{{ route('mahasiswa.edit', $m->id) }}" class="btn btn-success">
-        <i class="bi bi-pencil"></i> Edit
-      </a>
-      <a href="{{ route('mahasiswa.index') }}" class="btn btn-outline-secondary">
-        <i class="bi bi-arrow-left"></i> Kembali
+    <div class="d-flex justify-content-end gap-2">
+      @if(auth()->user()->role === 'admin')
+        <a href="{{ route('mahasiswa.edit', $mahasiswa->id) }}" class="btn btn-primary">
+          <i class="bi bi-pencil-square me-1"></i> Edit
+        </a>
+      @endif
+      <a href="{{ route('mahasiswa.index') }}" class="btn btn-light border">
+        <i class="bi bi-arrow-left-circle me-1"></i> Kembali
       </a>
     </div>
   </div>

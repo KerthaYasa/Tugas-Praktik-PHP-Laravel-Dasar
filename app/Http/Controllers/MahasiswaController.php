@@ -2,107 +2,125 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Mahasiswa;
-use App\Models\Prodi;
-use App\Models\Fakultas;
 use Illuminate\Http\Request;
+use App\Models\Mahasiswa;
+use App\Models\ProgramStudi;
+use App\Models\Fakultas;
 
 class MahasiswaController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    // 🟦 Index - Search + Filter
     public function index(Request $request)
     {
-        $q = $request->input('q');
-        $prodiId = $request->input('prodi_id');
-        $fakultasId = $request->input('fakultas_id');
+        $q = $request->query('q');
+        $fakultasId = $request->query('fakultas_id');
+        $prodiId = $request->query('prodi_id');
 
-        $query = Mahasiswa::with(['prodi.fakultas']);
+        $query = Mahasiswa::with(['prodi','prodi.fakultas']);
 
-        // Filter pencarian NIM atau Nama
         if ($q) {
-            $query->where(function ($sub) use ($q) {
-                $sub->where('nim', 'like', "%{$q}%")
-                    ->orWhere('nama', 'like', "%{$q}%");
+            $query->where(function($qb) use ($q){
+                $qb->where('nim', 'like', "%{$q}%")
+                ->orWhere('nama', 'like', "%{$q}%")
+                ->orWhereHas('prodi', function($q2) use ($q){
+                    $q2->where('nama_prodi', 'like', "%{$q}%");
+                });
             });
         }
 
-        // Filter berdasarkan Prodi
+        if ($fakultasId) {
+            // hanya ambil mahasiswa yang prodi nya punya fakultas sesuai
+            $query->whereHas('prodi', function($q) use ($fakultasId) {
+                $q->where('fakultas_id', $fakultasId);
+            });
+        }
+
         if ($prodiId) {
             $query->where('prodi_id', $prodiId);
         }
 
-        // Filter berdasarkan Fakultas
-        if ($fakultasId) {
-            $query->whereHas('prodi', function ($sub) use ($fakultasId) {
-                $sub->where('fakultas_id', $fakultasId);
-            });
-        }
+        $mahasiswa = $query->orderBy('nama')->paginate(10);
 
-        // Gunakan $query yang sudah difilter
-        $mahasiswa = $query->orderBy('nim', 'asc')->paginate(10);
-        
-        $allProdi = Prodi::with('fakultas')->orderBy('nama_prodi')->get();
-        $allFakultas = Fakultas::orderBy('nama_fakultas')->get();
+        // data untuk dropdown filter
+        $allFakultas = \App\Models\Fakultas::orderBy('nama_fakultas')->get();
+        $allProdi = \App\Models\ProgramStudi::with('fakultas')->orderBy('nama_prodi')->get();
 
-        return view('mahasiswa.index', compact('mahasiswa', 'allProdi', 'allFakultas'));
+        return view('mahasiswa.index', compact('mahasiswa','allFakultas','allProdi','q'));
     }
 
-    public function show(Mahasiswa $mahasiswa)
-    {
-        return view('mahasiswa.show', ['m' => $mahasiswa]);
-    }
-
+    // 🟦 Form Tambah
     public function create()
     {
-        $fakultas = Fakultas::orderBy('nama_fakultas')->get();
-        $prodi = [];
-        $mahasiswa = new Mahasiswa();
+        if (!auth()->user()->isAdmin()) abort(403);
 
-        return view('mahasiswa.create', compact('fakultas', 'prodi', 'mahasiswa'));
+        $prodi = ProgramStudi::with('fakultas')->orderBy('nama_prodi')->get();
+        return view('mahasiswa.create', compact('prodi'));
     }
 
+    // 🟦 Simpan
     public function store(Request $request)
     {
-        $request->validate([
-            'nim' => 'required|string|max:20|unique:mahasiswa,nim',
-            'nama' => 'required|string|max:100',
-            'prodi_id' => 'required|exists:prodi,id'
+        if (!auth()->user()->isAdmin()) abort(403);
+
+        $data = $request->validate([
+            'nim' => 'required|string|max:15|unique:mahasiswas,nim',
+            'nama' => 'required|string|max:150',
+            'email' => 'nullable|email',
+            'telepon' => 'nullable|string|max:20',
+            'alamat' => 'nullable|string|max:255',
+            'prodi_id' => 'required|exists:program_studis,id',
         ]);
 
-        Mahasiswa::create($request->all());
-        
-        return redirect()->route('mahasiswa.index')
-                         ->with('success', 'Data mahasiswa berhasil ditambahkan!');
+        Mahasiswa::create($data);
+        return redirect()->route('mahasiswa.index')->with('success', '✅ Mahasiswa berhasil ditambahkan.');
     }
 
+    // 🟦 Detail
+    public function show(Mahasiswa $mahasiswa)
+    {
+        $mahasiswa->load('prodi.fakultas');
+        return view('mahasiswa.show', compact('mahasiswa'));
+    }
+
+    // 🟦 Form Edit
     public function edit(Mahasiswa $mahasiswa)
     {
-        $fakultas = Fakultas::orderBy('nama_fakultas')->get();
-        $prodi = Prodi::where('fakultas_id', $mahasiswa->prodi->fakultas->id ?? null)
-                      ->orderBy('nama_prodi')
-                      ->get();
+        if (!auth()->user()->isAdmin()) abort(403);
 
-        return view('mahasiswa.edit', compact('mahasiswa', 'fakultas', 'prodi'));
+        $prodi = ProgramStudi::with('fakultas')->orderBy('nama_prodi')->get();
+        return view('mahasiswa.edit', compact('mahasiswa', 'prodi'));
     }
 
+    // 🟦 Update
     public function update(Request $request, Mahasiswa $mahasiswa)
     {
-        $request->validate([
-            'nim' => 'required|string|max:20|unique:mahasiswa,nim,' . $mahasiswa->id,
-            'nama' => 'required|string|max:100',
-            'prodi_id' => 'required|exists:prodi,id'
+        if (!auth()->user()->isAdmin()) abort(403);
+
+        $data = $request->validate([
+            'nim' => 'required|string|max:15|unique:mahasiswas,nim,' . $mahasiswa->id,
+            'nama' => 'required|string|max:150',
+            'email' => 'nullable|email',
+            'telepon' => 'nullable|string|max:20',
+            'alamat' => 'nullable|string|max:255',
+            'prodi_id' => 'required|exists:program_studis,id',
         ]);
 
-        $mahasiswa->update($request->all());
-        
-        return redirect()->route('mahasiswa.index')
-                         ->with('success', 'Data mahasiswa berhasil diperbarui!');
+        $mahasiswa->update($data);
+
+        return redirect()->route('mahasiswa.index')->with('success', '✅ Mahasiswa berhasil diperbarui.');
     }
 
+    // 🟦 Hapus
     public function destroy(Mahasiswa $mahasiswa)
     {
+        if (!auth()->user()->isAdmin()) abort(403);
+
         $mahasiswa->delete();
-        
-        return redirect()->route('mahasiswa.index')
-                         ->with('success', 'Data mahasiswa berhasil dihapus!');
+        return redirect()->route('mahasiswa.index')->with('success', '🗑️ Mahasiswa berhasil dihapus.');
     }
 }

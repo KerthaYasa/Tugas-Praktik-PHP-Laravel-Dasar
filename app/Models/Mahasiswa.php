@@ -4,23 +4,41 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Mahasiswa extends Model
 {
     use HasFactory;
 
-    // pastikan merujuk ke nama tabel yang sebenarnya di DB
-    protected $table = 'mahasiswa';
+    protected $table = 'mahasiswas';
 
+    /**
+     * Gunakan $fillable — daftar kolom yang boleh di-mass assign.
+     * Jangan menggunakan daftar kolom yang ingin diassign di $guarded.
+     */
     protected $fillable = [
         'nim',
         'nama',
-        'prodi_id', // jika sudah ditambahkan kolom ini
+        'email',
+        'alamat',
+        'telepon',
+        'prodi_id',
     ];
 
-    public function prodi()
+    /**
+     * Relasi: Mahasiswa belongs to ProgramStudi
+     */
+    public function prodi(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Prodi::class, 'prodi_id');
+        return $this->belongsTo(ProgramStudi::class, 'prodi_id');
+    }
+
+    /**
+     * Accessor: Akses fakultas langsung tanpa perlu ->prodi->fakultas
+     * Contoh: $mahasiswa->fakultas->nama_fakultas
+     */
+    public function getFakultasAttribute()
+    {
+        return $this->prodi?->fakultas;
     }
 }
-

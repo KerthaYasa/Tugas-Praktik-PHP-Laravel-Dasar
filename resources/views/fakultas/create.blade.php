@@ -3,45 +3,35 @@
 @section('title', 'Tambah Fakultas')
 
 @section('content')
-<div class="card">
-  <div class="card-body">
-    <div class="d-flex align-items-center mb-3">
-      <div class="me-3">
-        <span class="fs-3">🏛️</span>
-      </div>
-      <div>
-        <h3 class="mb-0">Tambah Fakultas</h3>
-        <small class="text-muted">Tambahkan data fakultas baru</small>
-      </div>
+<div class="container py-4">
+  <div class="card shadow border-0 rounded-3">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h5 class="mb-0"><i class="bi bi-plus-circle"></i> Tambah Fakultas</h5>
+      <div></div>
     </div>
 
-    @if ($errors->any())
-      <div class="alert alert-danger">
-        <strong>Periksa input anda:</strong>
-        <ul class="mb-0">
-          @foreach ($errors->all() as $err)
-            <li>{{ $err }}</li>
-          @endforeach
-        </ul>
-      </div>
-    @endif
+    <div class="card-body">
+      @if(session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+      @endif
 
-    <form action="{{ route('fakultas.store') }}" method="POST">
-      @csrf
+      <form action="{{ route('fakultas.store') }}" method="POST">
+        @csrf
 
-      {{-- include form partial: resources/views/fakultas/_form.blade.php --}}
-      @include('fakultas._form')
+        {{-- include partial form (fields) --}}
+        @include('fakultas._form')
 
-      <div class="d-flex justify-content-end mt-4">
-
-        <div>
-          <button type="submit" class="btn btn-primary">
-            <i class="bi bi-save me-1"></i> Simpan
+        {{-- tombol Simpan lalu Kembali (di kanan) --}}
+        <div class="d-flex justify-content-end gap-2 mt-4">
+          <button type="submit" class="btn btn-success px-4">
+            <i class="bi bi-save"></i> Simpan
           </button>
-          <a href="{{ route('fakultas.index') }}" class="btn btn-outline-secondary ms-2">Batal</a>
+          <a href="{{ route('fakultas.index') }}" class="btn btn-light px-4">
+            <i class="bi bi-arrow-left"></i> Kembali
+          </a>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
 </div>
 @endsection
