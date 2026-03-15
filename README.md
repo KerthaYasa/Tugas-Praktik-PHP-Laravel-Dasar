@@ -118,16 +118,3 @@ php artisan serve
 - 🌐 Cocok untuk pembelajaran dasar Laravel dan portofolio pribadi
 
 ---
-
-## 📜 **Lisensi**
-
-Project ini dibuat untuk tujuan pembelajaran dan tugas akademik.  
-Silakan gunakan atau modifikasi sesuai kebutuhan — dengan tetap mencantumkan kredit pembuat. ❤️
-
----
-
-<p align="center">
-  <b>© 2025 Kampus APP by I Komang Cahya Kertha Yasa</b><br>
-  Dibuat dengan 💖 menggunakan <a href="https://laravel.com" target="_blank">Laravel</a> dan <a href="https://getbootstrap.com" target="_blank">Bootstrap 5</a>.
-</p>
-```
